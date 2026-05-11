@@ -1,74 +1,68 @@
-let expression = "0";
-let isEvaluated = false;
+let currentInput = '0';
+let previousInput = '';
+let operator = null;
 
-const displayEl = document.getElementById('display');
-const historyEl = document.getElementById('history');
+const currentDisplay = document.getElementById('current-operand');
+const previousDisplay = document.getElementById('previous-operand');
 
 function updateDisplay() {
-    let formatted = expression.replace(/\*/g, '×').replace(/\//g, '÷');
-    displayEl.innerText = formatted;
+    currentDisplay.innerText = currentInput;
+    previousDisplay.innerText = previousInput;
 }
 
-function pushSymbol(symbol) {
-    if (expression === "0" || isEvaluated) {
-        expression = symbol;
-        isEvaluated = false;
+function appendNumber(number) {
+    if (currentInput === '0' && number !== '.') {
+        currentInput = number;
     } else {
-        expression += symbol;
+        if (number === '.' && currentInput.includes('.')) return;
+        currentInput += number;
     }
     updateDisplay();
 }
 
-function pushFunc(func) {
-    if (expression === "0" || isEvaluated) {
-        expression = func;
-        isEvaluated = false;
-    } else {
-        expression += func;
+function appendOperator(op) {
+    if (op === '+/-') {
+        currentInput = (parseFloat(currentInput) * -1).toString();
+        updateDisplay();
+        return;
     }
+
+    if (currentInput === '') return;
+    if (previousInput !== '') {
+        calculate();
+    }
+    
+    operator = op;
+    previousInput = currentInput + ' ' + (op === '*' ? '×' : op === '/' ? '÷' : op);
+    currentInput = '';
     updateDisplay();
 }
 
 function clearDisplay() {
-    expression = "0";
-    historyEl.innerText = "";
-    updateDisplay();
-}
-
-function backspace() {
-    if (expression.length > 1) {
-        expression = expression.slice(0, -1);
-    } else {
-        expression = "0";
-    }
+    currentInput = '0';
+    previousInput = '';
+    operator = null;
     updateDisplay();
 }
 
 function calculate() {
-    try {
-        let result = math.evaluate(expression);  
-        historyEl.innerText = expression.replace(/\*/g, '×').replace(/\//g, '÷') + " =";   
-        if (!Number.isInteger(result)) {
-            result = parseFloat(result.toFixed(5));
-        }
-        
-        expression = result.toString();
-        isEvaluated = true;
-        updateDisplay();
-    } catch (error) {
-        displayEl.innerText = "Error";
-        expression = "0";
-        isEvaluated = true;
-    }
-}
+    let result;
+    const prev = parseFloat(previousInput);
+    const current = parseFloat(currentInput);
 
-document.addEventListener('keydown', (e) => {
-    if (e.key >= '0' && e.key <= '9') pushSymbol(e.key);
-    if (e.key === '+') pushSymbol('+');
-    if (e.key === '-') pushSymbol('-');
-    if (e.key === '*') pushSymbol('*');
-    if (e.key === '/') pushSymbol('/');
-    if (e.key === 'Enter' || e.key === '=') calculate();
-    if (e.key === 'Backspace') backspace();
-    if (e.key === 'Escape') clearDisplay();
-});
+    if (isNaN(prev) || isNaN(current)) return;
+
+    switch (operator) {
+        case '+': result = prev + current; break;
+        case '-': result = prev - current; break;
+        case '*': result = prev * current; break;
+        case '/': result = prev / current; break;
+        case '%': result = prev % current; break;
+        default: return;
+    }
+
+    currentInput = result.toString();
+    operator = null;
+    previousInput = '';
+    updateDisplay();
+}
