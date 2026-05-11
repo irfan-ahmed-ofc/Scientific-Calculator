@@ -1,73 +1,74 @@
-let currentInput = "0";
-let shouldResetDisplay = false;
+let expression = "0";
+let isEvaluated = false;
+
+const displayEl = document.getElementById('display');
+const historyEl = document.getElementById('history');
 
 function updateDisplay() {
-    const display = document.getElementById('display');
-    display.innerText = currentInput;
+    let formatted = expression.replace(/\*/g, '×').replace(/\//g, '÷');
+    displayEl.innerText = formatted;
 }
 
 function pushSymbol(symbol) {
-    if (currentInput === "0" || shouldResetDisplay) {
-        if (symbol === '.') {
-            currentInput = "0.";
-        } else if (symbol === 'π') {
-            currentInput = Math.PI.toString();
-        } else if (symbol === 'e') {
-            currentInput = Math.E.toString();
-        } else if (symbol === 'EXP') {
-            currentInput = "0*10^";
-        } else {
-            currentInput = symbol;
-        }
-        shouldResetDisplay = false;
+    if (expression === "0" || isEvaluated) {
+        expression = symbol;
+        isEvaluated = false;
     } else {
-        if (symbol === 'π') {
-            currentInput += Math.PI;
-        } else if (symbol === 'e') {
-            currentInput += Math.E;
-        } else if (symbol === 'EXP') {
-            currentInput += "*10^";
-        } else {
-            currentInput += symbol;
-        }
+        expression += symbol;
     }
     updateDisplay();
 }
 
-function pushFunction(func) {
-    if (currentInput === "0" || shouldResetDisplay) {
-        currentInput = func + "(";
-        shouldResetDisplay = false;
+function pushFunc(func) {
+    if (expression === "0" || isEvaluated) {
+        expression = func;
+        isEvaluated = false;
     } else {
-        currentInput += func + "(";
+        expression += func;
     }
     updateDisplay();
 }
 
 function clearDisplay() {
-    currentInput = "0";
+    expression = "0";
+    historyEl.innerText = "";
     updateDisplay();
 }
 
 function backspace() {
-    if (currentInput.length > 1) {
-        currentInput = currentInput.slice(0, -1);
+    if (expression.length > 1) {
+        expression = expression.slice(0, -1);
     } else {
-        currentInput = "0";
+        expression = "0";
     }
     updateDisplay();
 }
 
 function calculate() {
     try {
-       
-        let result = eval(currentInput.replace('^', '**')); 
-        currentInput = result.toString();
-        shouldResetDisplay = true;
+        let result = math.evaluate(expression);  
+        historyEl.innerText = expression.replace(/\*/g, '×').replace(/\//g, '÷') + " =";   
+        if (!Number.isInteger(result)) {
+            result = parseFloat(result.toFixed(5));
+        }
+        
+        expression = result.toString();
+        isEvaluated = true;
         updateDisplay();
-    } catch (e) {
-        currentInput = "Error";
-        updateDisplay();
-        shouldResetDisplay = true;
+    } catch (error) {
+        displayEl.innerText = "Error";
+        expression = "0";
+        isEvaluated = true;
     }
 }
+
+document.addEventListener('keydown', (e) => {
+    if (e.key >= '0' && e.key <= '9') pushSymbol(e.key);
+    if (e.key === '+') pushSymbol('+');
+    if (e.key === '-') pushSymbol('-');
+    if (e.key === '*') pushSymbol('*');
+    if (e.key === '/') pushSymbol('/');
+    if (e.key === 'Enter' || e.key === '=') calculate();
+    if (e.key === 'Backspace') backspace();
+    if (e.key === 'Escape') clearDisplay();
+});

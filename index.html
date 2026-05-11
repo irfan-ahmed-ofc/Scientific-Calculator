@@ -3,61 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scientific Calculator Pro</title>
+    <title>Scientific Calculator</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
 </head>
 <body>
 
-<div class="calculator-glass">
+<div class="calculator-card">
     <div class="brand">
         <span>SCIENTIFIC</span>
-        <div class="model-badge">PRO-X</div>
+        <div class="model-badge">Irfan-X</div>
     </div>
 
-    <div class="display-wrapper">
-        <div class="history-display" id="history"></div>
-        <div class="input-display" id="display">0</div>
-        <input type="hidden" id="display-input" value="0">
+    <div class="display-container">
+        <div class="history" id="history"></div>
+        <div class="current-input" id="display">0</div>
     </div>
 
-    <div class="buttons-grid">
+    <div class="keypad">
         <button class="btn btn-sci" onclick="pushSymbol('(')">(</button>
         <button class="btn btn-sci" onclick="pushSymbol(')')">)</button>
-        <button class="btn btn-sci btn-clear" onclick="clearDisplay()">AC</button>
-        <button class="btn btn-sci btn-del" onclick="backspace()">DEL</button>
+        <button class="btn btn-danger" onclick="clearDisplay()">AC</button>
+        <button class="btn btn-danger" onclick="backspace()">DEL</button>
         <button class="btn btn-sci" onclick="pushSymbol('%')">%</button>
 
-        <button class="btn btn-sci" onclick="pushFunction('sin')">sin</button>
-        <button class="btn btn-sci" onclick="pushFunction('cos')">cos</button>
-        <button class="btn btn-sci" onclick="pushFunction('tan')">tan</button>
-        <button class="btn btn-sci" onclick="pushFunction('log')">log</button>
-        <button class="btn btn-sci" onclick="pushFunction('ln')">ln</button>
+        <button class="btn btn-sci" onclick="pushFunc('sin(')">sin</button>
+        <button class="btn btn-sci" onclick="pushFunc('cos(')">cos</button>
+        <button class="btn btn-sci" onclick="pushFunc('tan(')">tan</button>
+        <button class="btn btn-sci" onclick="pushFunc('log10(')">log</button>
+        <button class="btn btn-sci" onclick="pushFunc('log(')">ln</button>
 
-        <button class="btn btn-sci" onclick="pushFunction('sqrt')">√</button>
-        <button class="btn btn-sci" onclick="pushSymbol('^')">^</button>
-        <button class="btn btn-sci" onclick="pushSymbol('π')">π</button>
-        <button class="btn btn-sci" onclick="pushSymbol('e')">e</button>
+        <button class="btn btn-sci" onclick="pushFunc('sqrt(')">√</button>
+        <button class="btn btn-sci" onclick="pushSymbol('^')">xʸ</button>
+        <button class="btn btn-sci" onclick="pushSymbol('PI')">π</button>
+        <button class="btn btn-sci" onclick="pushSymbol('E')">e</button>
         <button class="btn btn-op" onclick="pushSymbol('/')">÷</button>
 
         <button class="btn btn-num" onclick="pushSymbol('7')">7</button>
         <button class="btn btn-num" onclick="pushSymbol('8')">8</button>
         <button class="btn btn-num" onclick="pushSymbol('9')">9</button>
         <button class="btn btn-op" onclick="pushSymbol('*')">×</button>
-        
+        <button class="btn btn-sci" onclick="pushFunc('abs(')">abs</button>
+
         <button class="btn btn-num" onclick="pushSymbol('4')">4</button>
         <button class="btn btn-num" onclick="pushSymbol('5')">5</button>
         <button class="btn btn-num" onclick="pushSymbol('6')">6</button>
         <button class="btn btn-op" onclick="pushSymbol('-')">-</button>
+        <button class="btn btn-sci" onclick="pushSymbol('!')">n!</button>
 
         <button class="btn btn-num" onclick="pushSymbol('1')">1</button>
         <button class="btn btn-num" onclick="pushSymbol('2')">2</button>
         <button class="btn btn-num" onclick="pushSymbol('3')">3</button>
         <button class="btn btn-op" onclick="pushSymbol('+')">+</button>
-
-        <button class="btn btn-num" onclick="pushSymbol('0')">0</button>
-        <button class="btn btn-num" onclick="pushSymbol('.')">.</button>
-        <button class="btn btn-sci" onclick="pushSymbol('EXP')">EXP</button>
         <button class="btn btn-equal" onclick="calculate()">=</button>
+
+        <button class="btn btn-num btn-zero" onclick="pushSymbol('0')">0</button>
+        <button class="btn btn-num" onclick="pushSymbol('.')">.</button>
+        <button class="btn btn-sci" onclick="pushSymbol('e')">EXP</button>
     </div>
 </div>
 
